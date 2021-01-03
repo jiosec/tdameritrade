@@ -36,6 +36,40 @@ def build_buy_market_stock_order(symbol, quantity):
         orderLegCollection=order_leg_collection,
     )
 
+def build_market_stock_order(symbol, quantity):
+    """Build Buy Market Stock Order
+
+    Buy {quantity} shares of {smybol} at the Market good for the Day.
+
+    Simple sample from https://developer.tdameritrade.com/content/place-order-samples
+
+    Args:
+        symbol: symbol you want to trade
+        quantity: How much of the stock to trade
+    """
+    # Constants
+    order_type = OrderType.MARKET
+    session = Session.NORMAL
+    duration = Duration.DAY
+    order_strategy_type = OrderStrategyType.SINGLE
+    # Can be changed to handle Buy and Sell for Equities
+    _instruction = Instruction.BUY
+    if quantity < 0:
+        _instruction = Instruction.SELL
+        quantity = - quantity
+
+    _order_leg = create_equity_order_leg(
+        instruction=_instruction, quantity=quantity, symbol=symbol,
+    )
+    order_leg_collection = [_order_leg]
+
+    return Order(
+        orderType=order_type,
+        session=session,
+        duration=duration,
+        orderStrategyType=order_strategy_type,
+        orderLegCollection=order_leg_collection,
+    )
 
 def build_buy_limit_option_order(symbol, quantity, price):
     """Build Buy Limit: Single Option
